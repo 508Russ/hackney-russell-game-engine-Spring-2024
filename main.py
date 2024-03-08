@@ -10,6 +10,9 @@ from random import randint
 from os import path
 from time import sleep
 
+
+# goals add start screen, coins, add powerup that speeds up player
+
 # 
 class Game:
     def __init__(self):
