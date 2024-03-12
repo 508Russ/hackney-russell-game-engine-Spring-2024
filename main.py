@@ -11,7 +11,7 @@ from os import path
 from time import sleep
 
 
-# goals add start screen, coins, add powerup that speeds up player
+# goals add add icon to player, coins, add powerup that speeds up player
 
 # 
 class Game:
