@@ -1,7 +1,7 @@
 WIDTH = 1024
 HEIGHT = 768
 
-FPS = 30
+FPS = 120
 
 TITLE = "My Fun Game"
 
