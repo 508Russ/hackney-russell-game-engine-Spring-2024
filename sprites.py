@@ -1,7 +1,11 @@
-# This file was created by: Chris Cozort
-# This code was inspired by Zelda and informed by Chris Bradfield
+# This file was created by: Russek
+
 import pygame as pg
 from settings import *
+import os
+
+game_folder = os.path.dirname(__file__)
+img_folder = os.path.join(game_folder, 'picture')
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -9,8 +13,8 @@ class Player(pg.sprite.Sprite):
         # init super class
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(GREEN)
+        self.image = pg.image.load(os.path.join(img_folder, 'spongebob.png')).convert()
+        self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.vx, self.vy = 0, 0
         self.x = x * TILESIZE
@@ -109,8 +113,8 @@ class Coin(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.coins
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(YELLOW)
+        self.image = pg.image.load(os.path.join(img_folder, 'coin.png')).convert()
+        self.image.set_colorkey(BLACK)
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y

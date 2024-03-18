@@ -1,4 +1,4 @@
-# This file was created by: Chris Cozort
+# This file was created by: Russell Hackney
 
 # import libraries and modules
 import pygame as pg
@@ -8,7 +8,7 @@ from random import randint
 import sys
 from os import path
 
-
+#add coins
 # Define game class...
 class Game:
     # Define a special method to init the properties of said class...
@@ -54,6 +54,8 @@ class Game:
                     self.player = Player(self, col, row)
                 if tile == 'C':
                     Coin(self, col, row)
+                if tile == 'F':
+                    Coin
 
     def run(self):
         # 
