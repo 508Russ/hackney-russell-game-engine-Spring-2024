@@ -1,11 +1,9 @@
-# This file was created by: Russek
-
+# This file was created by: Chris Cozort
+# This code was inspired by Zelda and informed by Chris Bradfield
 import pygame as pg
 from settings import *
-import os
-
-game_folder = os.path.dirname(__file__)
-img_folder = os.path.join(game_folder, 'picture')
+from utils import *
+from random import choice
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
@@ -13,25 +11,33 @@ class Player(pg.sprite.Sprite):
         # init super class
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.image.load(os.path.join(img_folder, 'spongebob.png')).convert()
-        self.image.set_colorkey(BLACK)
+        # self.image = pg.Surface((TILESIZE, TILESIZE))
+        # added player image to sprite from the game class...
+        self.image = game.player_img
+        # self.image.fill(GREEN)
         self.rect = self.image.get_rect()
         self.vx, self.vy = 0, 0
         self.x = x * TILESIZE
         self.y = y * TILESIZE
         self.moneybag = 0
+        self.speed = 300
+        self.status = ""
+        self.hitpoints = 100
+        self.cooling = False
     
     def get_keys(self):
-        self.vx, self.vy = 0, 0
+        self.vx, self.vy = 0, 0 
         keys = pg.key.get_pressed()
+        if keys[pg.K_t]:
+            self.game.test_timer.event_reset()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.vx = -PLAYER_SPEED  
+            self.vx = -self.speed
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
-            self.vx = PLAYER_SPEED  
+            self.vx = self.speed
         if keys[pg.K_UP] or keys[pg.K_w]:
-            self.vy = -PLAYER_SPEED  
+            self.vy = -self.speed  
         if keys[pg.K_DOWN] or keys[pg.K_s]:
-            self.vy = PLAYER_SPEED
+            self.vy = self.speed
         if self.vx != 0 and self.vy != 0:
             self.vx *= 0.7071
             self.vy *= 0.7071
@@ -67,14 +73,31 @@ class Player(pg.sprite.Sprite):
                 self.vy = 0
                 self.rect.y = self.y
     
+    # made possible by Aayush's question!
     def collide_with_group(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)
         if hits:
             if str(hits[0].__class__.__name__) == "Coin":
                 self.moneybag += 1
+            if str(hits[0].__class__.__name__) == "PowerUp":
+                print(hits[0].__class__.__name__)
+                effect = choice(POWER_UP_EFFECTS)
+                self.game.cooldown.cd = 5
+                self.cooling = True
+                print(effect)
+                print(self.cooling)
+                if effect == "Invincible":
+                    self.status = "Invincible"
+            if str(hits[0].__class__.__name__) == "Mob":
+                # print(hits[0].__class__.__name__)
+                # print("Collided with mob")
+                # self.hitpoints -= 1
+                if self.status == "Invincible":
+                    print("you can't hurt me")
 
     def update(self):
         self.get_keys()
+        # self.power_up_cd.ticking()
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
         self.rect.x = self.x
@@ -84,24 +107,23 @@ class Player(pg.sprite.Sprite):
         # add collision later
         self.collide_with_walls('y')
         self.collide_with_group(self.game.coins, True)
+        if self.game.cooldown.cd < 1:
+            self.cooling = False
+        if not self.cooling:
+            self.collide_with_group(self.game.power_ups, True)
+        self.collide_with_group(self.game.mobs, False)
           
         # coin_hits = pg.sprite.spritecollide(self.game.coins, True)
         # if coin_hits:
         #     print("I got a coin")
         
-
- 
-
-
-
-
 class Wall(pg.sprite.Sprite):
     def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = pg.Surface((TILESIZE, TILESIZE))
-        self.image.fill(GREEN)
+        self.image.fill(BLUE)
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
@@ -113,11 +135,68 @@ class Coin(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.coins
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = pg.image.load(os.path.join(img_folder, 'coin.png')).convert()
-        self.image.set_colorkey(BLACK)
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(YELLOW)
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.rect.x = x * TILESIZE
+        self.rect.y = y * TILESIZE
+
+class PowerUp(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.power_ups
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(PURPLE)
         self.rect = self.image.get_rect()
         self.x = x
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
         
+class Mob(pg.sprite.Sprite):
+    def __init__(self, game, x, y):
+        self.groups = game.all_sprites, game.mobs
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.image = pg.Surface((TILESIZE, TILESIZE))
+        self.image.fill(RED)
+        self.rect = self.image.get_rect()
+        self.x = x
+        self.y = y
+        self.vx, self.vy = 100, 100
+        self.x = x * TILESIZE
+        self.y = y * TILESIZE
+        self.speed = 1
+    def collide_with_walls(self, dir):
+        if dir == 'x':
+            # print('colliding on the x')
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vx *= -1
+                self.rect.x = self.x
+        if dir == 'y':
+            # print('colliding on the y')
+            hits = pg.sprite.spritecollide(self, self.game.walls, False)
+            if hits:
+                self.vy *= -1
+                self.rect.y = self.y
+    def update(self):
+        # self.rect.x += 1
+        self.x += self.vx * self.game.dt
+        self.y += self.vy * self.game.dt
+        
+        if self.rect.x < self.game.player.rect.x:
+            self.vx = 100
+        if self.rect.x > self.game.player.rect.x:
+            self.vx = -100    
+        if self.rect.y < self.game.player.rect.y:
+            self.vy = 100
+        if self.rect.y > self.game.player.rect.y:
+            self.vy = -100
+        self.rect.x = self.x
+        # self.collide_with_walls('x')
+        self.rect.y = self.y
+        # self.collide_with_walls('y')
