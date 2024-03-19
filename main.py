@@ -1,7 +1,7 @@
 # This file was created by: Russell Hackney
 
 
-# creat mob that chases you, add image to character, create start screen
+# creat mob that chases you, add timer that goes up, create start screen
 '''
 Game design truths:
 goals, rules, feedback, freedom, what the verb, and will it form a sentence 
