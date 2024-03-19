@@ -1,5 +1,5 @@
-# This file was created by: Chris Cozort
-# This code was inspired by Zelda and informed by Chris Bradfield
+# This file was created by: Russell Hackney
+
 import pygame as pg
 from settings import *
 from utils import *

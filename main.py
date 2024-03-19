@@ -1,13 +1,10 @@
-# This file was created by: Chris Cozort
-# per 6 is the best period
-# import libraries and modules
-# my first source control edit
+# This file was created by: Russell Hackney
+
+
+# creat mob that chases you, add image to character, create start screen
 '''
 Game design truths:
 goals, rules, feedback, freedom, what the verb, and will it form a sentence 
-
-
-
 
 '''
 import pygame as pg
