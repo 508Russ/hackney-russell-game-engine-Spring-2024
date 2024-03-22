@@ -133,7 +133,7 @@ class Game:
             #         self.player.move(dy=1)
     def show_start_screen(self):
         self.screen.fill(BGCOLOR)
-        self.draw_text(self.screen, "This is the start screen", 24, WHITE, WIDTH/2 - 32, 2)
+        self.draw_text(self.screen, "Press any key to start", 50, PURPLE, WIDTH/2-180, HEIGHT/2-50)
         pg.display.flip()
         self.wait_for_key()
     

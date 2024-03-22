@@ -73,7 +73,7 @@ class Player(pg.sprite.Sprite):
                 self.vy = 0
                 self.rect.y = self.y
     
-    # made possible by Aayush's question!
+    
     def collide_with_group(self, group, kill):
         hits = pg.sprite.spritecollide(self, group, kill)
         if hits:
