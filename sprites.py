@@ -94,6 +94,7 @@ class Player(pg.sprite.Sprite):
                 # self.hitpoints -= 1
                 pg.quit
                 
+                
 # update function
     def update(self):
         self.get_keys()
@@ -158,18 +159,29 @@ class PowerUp(pg.sprite.Sprite):
     #    creates mob that chases you around
 class Mob(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        # Define the groups the sprite belongs to
         self.groups = game.all_sprites, game.mobs
+        # Initialize the sprite
         pg.sprite.Sprite.__init__(self, self.groups)
+        # Reference to the game instance
         self.game = game
+        # Create the image for the sprite
         self.image = pg.Surface((TILESIZE, TILESIZE))
+        # Fill the image with red color
         self.image.fill(RED)
+        # Get the rectangle of the sprite's image
         self.rect = self.image.get_rect()
+        # Set the initial position of the sprite
         self.x = x
         self.y = y
+        # Set the initial velocity of the sprite
         self.vx, self.vy = 100, 100
+        # Multiply x and y by TILESIZE to get the pixel position
         self.x = x * TILESIZE
         self.y = y * TILESIZE
+        # Set the speed of the sprite
         self.speed = 1
+
 # doesnt let sprite go thorugh walls
     def collide_with_walls(self, dir):
         if dir == 'x':

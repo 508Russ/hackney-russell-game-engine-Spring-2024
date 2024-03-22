@@ -131,23 +131,36 @@ class Game:
             #         self.player.move(dy=-1)
             #     if event.key == pg.K_DOWN:
             #         self.player.move(dy=1)
-    def show_start_screen(self):
-        self.screen.fill(BGCOLOR)
-        self.draw_text(self.screen, "Press any key to start", 50, PURPLE, WIDTH/2-180, HEIGHT/2-50)
-        pg.display.flip()
-        self.wait_for_key()
-    
-    def wait_for_key(self):
-        waiting = True
-        while waiting:
-            self.clock.tick(FPS)
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    waiting = False
-                    self.quit()
-                if event.type == pg.KEYUP:
-                    waiting = False
+    # Define a method to show the start screen
+def show_start_screen(self):
+    # Fill the screen with the background color
+    self.screen.fill(BGCOLOR)
+    # Draw text on the screen to prompt the user to press any key to start
+    self.draw_text(self.screen, "Press any key to start", 50, PURPLE, WIDTH/2-180, HEIGHT/2-50)
+    # Update the display
+    pg.display.flip()
+    # Wait for the user to press a key
+    self.wait_for_key()
 
+# Define a method to wait for a key press
+def wait_for_key(self):
+    # Set the flag to True to indicate waiting for a key press
+    waiting = True
+    # Continue waiting until a key is pressed
+    while waiting:
+        # Control the frame rate
+        self.clock.tick(FPS)
+        # Check for events (e.g., key press or window close)
+        for event in pg.event.get():
+            # If the user closes the window, exit the game
+            if event.type == pg.QUIT:
+                waiting = False
+                self.quit()
+            # If the user releases a key, stop waiting
+            if event.type == pg.KEYUP:
+                waiting = False
+
+    
 # Instantiate the game... 
 g = Game()
 # use game method run to run
