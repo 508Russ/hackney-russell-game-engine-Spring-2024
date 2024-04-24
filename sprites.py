@@ -1,3 +1,4 @@
+
 # This file was created by: Russell Hackney
 
 import pygame as pg
@@ -113,6 +114,21 @@ class Player(pg.sprite.Sprite):
         if not self.cooling:
             self.collide_with_group(self.game.power_ups, True)
         self.collide_with_group(self.game.mobs, False)
+        self.collide_with_walls('x')
+        self.rect.y = self.y
+        self.collide_with_walls('y')
+
+        # Check collision with mobs
+        mob_collisions = pg.sprite.spritecollide(self, self.game.mobs, False)
+        if mob_collisions:
+            self.game.end_game()
+
+        self.collide_with_group(self.game.coins, True)
+        if self.game.cooldown.cd < 1:
+            self.cooling = False
+        if not self.cooling:
+            self.collide_with_group(self.game.power_ups, True)
+        
           
         # coin_hits = pg.sprite.spritecollide(self.game.coins, True)
         # if coin_hits:
@@ -214,3 +230,6 @@ class Mob(pg.sprite.Sprite):
         # self.collide_with_walls('x')
         self.rect.y = self.y
         # self.collide_with_walls('y')
+
+
+        
