@@ -6,8 +6,8 @@
 Game design truths:
 goals, rules, feedback, freedom, what the verb, and will it form a sentence 
 
-# beat goal: make game end when mob touches player
-
+# beta goal: make game end when mob touches player
+# sources: Mr. Cozort, Chat-GPT, Scott
 
 '''
 import pygame as pg
