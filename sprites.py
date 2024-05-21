@@ -1,5 +1,3 @@
-# This file was created by: Russell Hackney
-
 import pygame as pg
 from settings import *
 from utils import *
@@ -8,16 +6,16 @@ from random import choice
 # Player class definition
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
-        # Initialize the sprite groups
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        # Set the player's image from the game class
         self.image = game.player_img
         self.rect = self.image.get_rect()
         self.vx, self.vy = 0, 0  # Velocity in x and y directions
         self.x = x * TILESIZE
         self.y = y * TILESIZE
+        self.rect.x = self.x
+        self.rect.y = self.y
         self.moneybag = 0
         self.speed = 300  # Player speed
         self.status = ""
@@ -26,16 +24,14 @@ class Player(pg.sprite.Sprite):
 
     # Method to handle player movement based on key inputs
     def get_keys(self):
-        self.vx, self.vy = 0, 0 
+        self.vx, self.vy = 0, 0
         keys = pg.key.get_pressed()
-        if keys[pg.K_t]:
-            self.game.test_timer.event_reset()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
             self.vx = -self.speed
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
             self.vx = self.speed
         if keys[pg.K_UP] or keys[pg.K_w]:
-            self.vy = -self.speed  
+            self.vy = -self.speed
         if keys[pg.K_DOWN] or keys[pg.K_s]:
             self.vy = self.speed
         if self.vx != 0 and self.vy != 0:
@@ -78,7 +74,15 @@ class Player(pg.sprite.Sprite):
                     self.status = "Invincible"
             if str(hits[0].__class__.__name__) == "Mob":
                 # Placeholder for mob collision logic
-                pg.quit
+                pg.quit()
+
+    # Method to teleport player to the cursor position
+    def teleport_to_cursor(self):
+        mouse_x, mouse_y = pg.mouse.get_pos()
+        self.x = mouse_x
+        self.y = mouse_y
+        self.rect.x = self.x
+        self.rect.y = self.y
 
     # Update method for the player
     def update(self):
@@ -190,17 +194,17 @@ class Mob(pg.sprite.Sprite):
     # Update method for the mob
     def update(self):
         self.vx, self.vy = 0, 0
-        
+
         # Simple AI to move towards the player
         if self.rect.x < self.game.player.rect.x:
             self.vx = self.speed
         if self.rect.x > self.game.player.rect.x:
-            self.vx = -self.speed    
+            self.vx = -self.speed
         if self.rect.y < self.game.player.rect.y:
             self.vy = self.speed
         if self.rect.y > self.game.player.rect.y:
             self.vy = -self.speed
-        
+
         self.x += self.vx * self.game.dt
         self.y += self.vy * self.game.dt
         self.rect.x = self.x
